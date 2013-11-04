@@ -1,2 +1,4 @@
-presence-analyzer-aprzybyszewska
-================================
+Presence Analyzer
+=================
+
+Calculate and show employees presence statistics.
