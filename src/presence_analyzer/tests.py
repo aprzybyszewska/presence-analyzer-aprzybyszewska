@@ -124,38 +124,43 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
                          datetime.time(9, 19, 52))
         sample_weekday = 2
         self.assertEqual(sample_date.weekday(), sample_weekday)
+        print data[10]
 
     def test_seconds_since_midnight(self):
         """
         Test calculate to seconds
         """
-        hour = 2
-        minute = 3
-        second = 2
-        result = hour * 3600 + minute * 60 + second
-        self.assertEqual(7382, result)
+        from presence_analyzer.utils import seconds_since_midnight
+        start = datetime.time(2, 3, 2)
+        end = datetime.time(3, 2, 3)
+        result_start = seconds_since_midnight(start)
+        self.assertEqual(7382, result_start)
+        result_end = seconds_since_midnight(end)
+        self.assertEqual(10923, result_end)
 
     def test_interval(self):
         """
         Test interval
         """
-        end = 5
-        start = 3
-        result = end - start
-        self.assertEqual(2,     result)
+        from presence_analyzer.utils import interval
+        start = datetime.time(2, 3, 2)
+        end = datetime.time(3, 2, 3)
+        result = interval(start, end)
+        self.assertEqual(3541, result)
 
     def test_mean(self):
         """
         Test mean
         """
+        from presence_analyzer.utils import mean
         items = [2, 3, 5, 10]
-        result = float(sum(items)) / len(items) if len(items) > 0 else 0
+        result = mean(items)
         self.assertEqual(5, result)
 
 
 def suite():
     """
-    Default test suite.
+    Default test suite.B
     """
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(PresenceAnalyzerViewsTestCase))
