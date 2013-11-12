@@ -7,7 +7,7 @@ import json
 import datetime
 import unittest
 import calendar
-from utils import seconds_since_midnight, mean, interval, group_by_weekday, start_end
+from presence_analyzer.utils import seconds_since_midnight, mean, interval
 from presence_analyzer import main, views, utils
 
 
@@ -80,6 +80,17 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(0, data[1][1])
         self.assertEqual(23705, data[4][1])
 
+    def test_presence_start_end_view(self):
+        """
+        Test presence start end views
+        """
+        resp = self.client.get('api/v1/presence_start_end/11')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual('Mon', data[0][0])
+        self.assertEqual(33134, data[0][1])
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -125,13 +136,12 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
                          datetime.time(9, 19, 52))
         sample_weekday = 2
         self.assertEqual(sample_date.weekday(), sample_weekday)
-        print data[10]
 
     def test_seconds_since_midnight(self):
         """
         Test calculate to seconds
         """
-        from presence_analyzer.utils import seconds_since_midnight
+        #from presence_analyzer.utils import seconds_since_midnight
         start = datetime.time(2, 3, 2)
         end = datetime.time(3, 2, 3)
         result_start = seconds_since_midnight(start)
@@ -143,7 +153,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Test interval
         """
-        from presence_analyzer.utils import interval
+        #from presence_analyzer.utils import interval
         start = datetime.time(2, 3, 2)
         end = datetime.time(3, 2, 3)
         result = interval(start, end)
@@ -153,33 +163,27 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Test mean
         """
-        from presence_analyzer.utils import mean
+        #from presence_analyzer.utils import mean
         items = [2, 3, 5, 10]
         result = mean(items)
         self.assertEqual(5, result)
 
-    def test_start_end(self):
+    def test_group_by_weekday_start_end(self):
+        """
+        Test group by weekdat start end
+        """
         data = utils.get_data()
         self.assertIsInstance(data, dict)
         self.assertItemsEqual(data.keys(), [10, 11])
         sample_date = datetime.date(2013, 9, 10)
-        self.assertIn(sample_date, data[10])
+        self.assertIn(sample_date, data[11])
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
-        self.assertEqual(data[10][sample_date]['start'],
-                        datetime.time(9, 39, 5))
-
-        result_start = {i: [] for i in range(7)}
-        result_stop = {i: [] for i in range(7)}
-        items = data[11]
-        mean_weekday = []
-        for date in items:
-            start = items[date]['start']
-            end = items[date]['end']
-            result_start[date.weekday()].append(seconds_since_midnight(start))
-            result_stop[date.weekday()].append(seconds_since_midnight(end))
-        for i in range(7):
-            mean_weekday.append((mean(result_start[i]), mean(result_stop[i])))
-        return mean_weekday
+        self.assertEqual(data[11][sample_date]['start'],
+                         datetime.time(9, 19, 50))
+        self.assertEqual(data[11][sample_date]['end'],
+                         datetime.time(13, 55, 54))
+        sample_weekday = 1
+        self.assertEqual(sample_date.weekday(), sample_weekday)
 
 
 def suite():
