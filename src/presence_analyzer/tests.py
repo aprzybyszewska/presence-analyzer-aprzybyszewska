@@ -6,7 +6,8 @@ import os.path
 import json
 import datetime
 import unittest
-
+import calendar
+from utils import seconds_since_midnight, mean, interval, group_by_weekday, start_end
 from presence_analyzer import main, views, utils
 
 
@@ -151,6 +152,29 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         items = [2, 3, 5, 10]
         result = float(sum(items)) / len(items) if len(items) > 0 else 0
         self.assertEqual(5, result)
+
+    def test_start_end(self):
+        data = utils.get_data()
+        self.assertIsInstance(data, dict)
+        self.assertItemsEqual(data.keys(), [10, 11])
+        sample_date = datetime.date(2013, 9, 10)
+        self.assertIn(sample_date, data[10])
+        self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
+        self.assertEqual(data[10][sample_date]['start'],
+                        datetime.time(9, 39, 5))
+
+        result_start = {i: [] for i in range(7)}
+        result_stop = {i: [] for i in range(7)}
+        items = data[11]
+        mean_weekday = []
+        for date in items:
+            start = items[date]['start']
+            end = items[date]['end']
+            result_start[date.weekday()].append(seconds_since_midnight(start))
+            result_stop[date.weekday()].append(seconds_since_midnight(end))
+        for i in range(7):
+            mean_weekday.append((mean(result_start[i]), mean(result_stop[i])))
+        return mean_weekday
 
 
 def suite():
