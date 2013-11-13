@@ -129,9 +129,6 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Test group by weekday
         """
         data = utils.get_data()
-        sample_date = datetime.date(2013, 9, 11)
-        sample_weekday = 2
-        self.assertEqual(sample_date.weekday(), sample_weekday)
         weekdays = group_by_weekday(data[10])
         self.assertEqual([30047], weekdays[1])
 
