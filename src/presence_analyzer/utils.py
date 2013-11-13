@@ -101,7 +101,7 @@ def mean(items):
 
 def group_by_weekday_start_end(items):
     """
-    Groups presence entries (from group by weekday) by start
+    Groups start and end hours by weekday
     """
     result_start = {i: [] for i in range(7)}
     result_stop = {i: [] for i in range(7)}
