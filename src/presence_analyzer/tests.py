@@ -129,8 +129,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Test group by weekday
         """
         data = utils.get_data()
-        weekdays = group_by_weekday(data[10])
-        self.assertEqual([30047], weekdays[1])
+        weekdays = group_by_weekday(data[11])
+        self.assertEqual([22969, 22999], weekdays[3])
 
     def test_seconds_since_midnight(self):
         """
@@ -166,8 +166,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         data = utils.get_data()
         result_start, result_stop = group_by_weekday_start_end(data[11])
-        self.assertEqual([33134], result_start[0])
-        self.assertEqual([57257], result_stop[0])
+        self.assertEqual([37116, 34088], result_start[3])
+        self.assertEqual([60085, 57087], result_stop[3])
 
 
 def suite():
