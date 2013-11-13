@@ -97,3 +97,17 @@ def mean(items):
     Calculates arithmetic mean. Returns zero for empty lists.
     """
     return float(sum(items)) / len(items) if len(items) > 0 else 0
+
+
+def group_by_weekday_start_end(items):
+    """
+    Groups start and end hours by weekday
+    """
+    result_start = {i: [] for i in range(7)}
+    result_stop = {i: [] for i in range(7)}
+    for date in items:
+        start = items[date]['start']
+        end = items[date]['end']
+        result_start[date.weekday()].append(seconds_since_midnight(start))
+        result_stop[date.weekday()].append(seconds_since_midnight(end))
+    return (result_start, result_stop)
