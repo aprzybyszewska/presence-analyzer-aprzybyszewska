@@ -130,7 +130,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         data = utils.get_data()
         weekdays = group_by_weekday(data[11])
-        self.assertEqual([24123],weekdays[0])
+        self.assertEqual([24123], weekdays[0])
         self.assertEqual([22969, 22999], weekdays[3])
 
     def test_seconds_since_midnight(self):
