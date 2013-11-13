@@ -171,17 +171,6 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Test group by weekdat start end
         """
         data = utils.get_data()
-        self.assertIsInstance(data, dict)
-        self.assertItemsEqual(data.keys(), [10, 11])
-        sample_date = datetime.date(2013, 9, 10)
-        self.assertIn(sample_date, data[11])
-        self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
-        self.assertEqual(data[11][sample_date]['start'],
-                         datetime.time(9, 19, 50))
-        self.assertEqual(data[11][sample_date]['end'],
-                         datetime.time(13, 55, 54))
-        sample_weekday = 1
-        self.assertEqual(sample_date.weekday(), sample_weekday)
         result_start, result_stop = group_by_weekday_start_end(data[11])
         self.assertEqual([33134], result_start[0])
         self.assertEqual([57257], result_stop[0])
