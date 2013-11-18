@@ -39,11 +39,7 @@
 {% endblock head %}
 
 
-        {% block header %}
-                <li id="selected"><a href="{{ url_for('mainpage') }}">Presence by weekday</a></li>
-                <li><a href="{{ url_for('mean_time') }}">Presence mean time</a></li>
-                <li><a href="{{ url_for('start_end') }}">Presence start-end</a></li>
-        {% endblock header %}
+                {% set selected_item = 'mainpage' %}
         
 
         {% block content %}

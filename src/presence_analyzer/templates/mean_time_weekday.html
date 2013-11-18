@@ -6,7 +6,7 @@
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"], 'language': 'pl'});
     </script>
-    <script src="/static/js/templ.js" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
 
         (function($) {
@@ -55,11 +55,7 @@
 {% endblock head %}
 
 
-        {% block header %}
-                <li><a href="{{ url_for('mainpage') }}">Presence by weekday</a></li>
-                <li id="selected"><a href="{{ url_for('mean_time') }}">Presence mean time</a></li>
-                <li><a href="{{ url_for('start_end') }}">Presence start-end</a></li>
-        {% endblock header %}
+                       {% set selected_item = 'mean_time' %}
 
         {% block content %}
             <h2>Presence mean time by weekday</h2>
