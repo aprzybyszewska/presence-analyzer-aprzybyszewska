@@ -12,6 +12,7 @@ from presence_analyzer.utils import group_by_weekday_start_end, \
 from presence_analyzer import main, utils
 
 
+
 TEST_DATA_CSV = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
 )
