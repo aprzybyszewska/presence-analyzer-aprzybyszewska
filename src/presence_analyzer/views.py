@@ -3,14 +3,18 @@
 Defines views.
 """
 import calendar
+import locale
 from flask import render_template
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import jsonify, get_data, mean, group_by_weekday
 from presence_analyzer.utils import group_by_weekday_start_end
+from presence_analyzer.utils import get_users, get_avatars
 
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
+
+locale.setlocale(locale.LC_ALL, "pl_PL.UTF-8")
 
 
 @app.route('/')
@@ -43,9 +47,24 @@ def users_view():
     """
     Users listing for dropdown.
     """
-    data = get_data()
-    return [{'user_id': i, 'name': 'User {0}'.format(str(i))}
-            for i in data.keys()]
+    users = get_users()
+    #data = get_data()
+    result = [{'user_id': i, 'name': users[i]}
+              for i in users.keys()]
+
+    result.sort(key=lambda item: item['name'], cmp=locale.strcoll)
+    return result
+
+
+@app.route('/api/v1/get_avatar/<int:user_id>', methods=['GET'])
+@jsonify
+def avatar_view(user_id):
+    """
+    Viewing avatars
+    """
+    avatars = get_avatars()
+    user_id = str(user_id)
+    return avatars[user_id]
 
 
 @app.route('/api/v1/mean_time_weekday/<int:user_id>', methods=['GET'])
