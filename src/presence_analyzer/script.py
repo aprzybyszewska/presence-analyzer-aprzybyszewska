@@ -5,6 +5,7 @@
 import os
 import sys
 from functools import partial
+import urllib
 
 import paste.script.command
 import werkzeug.script
@@ -111,3 +112,9 @@ def run():
         _serve('stop', dry_run=dry_run)
 
     werkzeug.script.run()
+
+
+def download_users():
+    app = make_app()
+    f = open(app.config['USERS_NAMES'], 'w')
+    f.write(urllib.urlopen("http://bolt/~sargo/users.xml").read())
