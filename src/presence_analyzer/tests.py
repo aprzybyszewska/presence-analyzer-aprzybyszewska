@@ -9,11 +9,13 @@ import unittest
 from presence_analyzer.utils import seconds_since_midnight, mean, interval
 from presence_analyzer.utils import group_by_weekday_start_end, \
     group_by_weekday
-from presence_analyzer import main, views, utils
-
+from presence_analyzer import main, utils
 
 TEST_DATA_CSV = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
+)
+TEST_USERS_NAMES = os.path.join(
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_users.xml'
 )
 
 
@@ -28,6 +30,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'USERS_NAMES': TEST_USERS_NAMES})
         self.client = main.app.test_client()
 
     def tearDown(self):
@@ -71,8 +74,22 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
-        self.assertEqual(len(data), 2)
-        self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+        self.assertEqual(len(data), 1)
+        self.assertDictEqual(data[0], {u'user_id': u'141',
+                                       u'name': u'Adam Pieśkiewicz'})
+        #self.assertEqual(len(data), 2)
+        #self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+
+    def test_avatar_view(self):
+        """
+        Test avatar viewing
+        """
+        resp = self.client.get('/api/v1/get_avatar/141')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(data,
+                         'https://intranet.stxnext.pl/api/images/users/141')
 
     def test_mean_time_weekday_view(self):
         """
@@ -83,7 +100,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 7)
-        self.assertEqual('Mon', data[0][0])
+        self.assertEqual('pon', data[0][0])
         self.assertEqual(0, data[0][1])
         self.assertEqual(30047.0, data[1][1])
 
@@ -96,7 +113,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 8)
-        self.assertEqual('Mon', data[1][0])
+        self.assertEqual('pon', data[1][0])
         self.assertEqual(0, data[1][1])
         self.assertEqual(23705, data[4][1])
 
@@ -108,7 +125,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
-        self.assertEqual('Mon', data[0][0])
+        self.assertEqual('pon', data[0][0])
         self.assertEqual(33134, data[0][1])
         self.assertEqual(57257, data[0][2])
 
@@ -123,6 +140,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'USERS_NAMES': TEST_USERS_NAMES})
 
     def tearDown(self):
         """
@@ -142,6 +160,24 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
         self.assertEqual(data[10][sample_date]['start'],
                          datetime.time(9, 39, 5))
+
+    def test_get_users(self):
+        """
+        Test getting users
+        """
+        data = utils.get_users()
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data.keys(), ['141'])
+        self.assertEqual(data['141'], u'Adam Pieśkiewicz')
+
+    def test_get_avatars(self):
+        """
+        Test getting avatar
+        """
+        data = utils.get_avatars()
+        self.assertEqual(data.keys(), ['141'])
+        self.assertEqual(data['141'],
+                         'https://intranet.stxnext.pl/api/images/users/141')
 
     def test_group_by_weekday(self):
         """

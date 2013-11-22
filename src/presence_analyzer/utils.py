@@ -12,6 +12,8 @@ from flask import Response
 
 from presence_analyzer.main import app
 
+from xml.etree import ElementTree
+
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
@@ -64,6 +66,41 @@ def get_data():
             data.setdefault(user_id, {})[date] = {'start': start, 'end': end}
 
     return data
+
+
+def get_users():
+    """
+    Getting users from xml
+    """
+    users = {}
+    user_id = []
+    xml = open(app.config['USERS_NAMES'], 'r')
+    xmldoc = ElementTree.parse(xml)
+    root = xmldoc.getroot()
+    users_xml = root.findall('users')[0]
+    user_id = [i.attrib['id'] for i in users_xml.findall('user')]
+    names = [i.text for i in users_xml.findall('user/name')]
+    users = dict(zip(user_id, names))
+    return users
+
+
+def get_avatars():
+    """
+    Getting avatars
+    """
+    avatars = {}
+    user_id = []
+    xml = open(app.config['USERS_NAMES'], 'r')
+    xmldoc = ElementTree.parse(xml)
+    root = xmldoc.getroot()
+    users_xml = root.findall('users')[0]
+    user_id = [i.attrib['id'] for i in users_xml.findall('user')]
+    protocol = [i.text for i in root.findall('server/protocol')]
+    av_host = [i.text for i in root.findall('server/host')]
+    avatar = [i.text for i in users_xml.findall('user/avatar')]
+    adres = [(x+"://"+y+z) for x in protocol for y in av_host for z in avatar]
+    avatars = dict(zip(user_id, adres))
+    return avatars
 
 
 def group_by_weekday(items):

@@ -8,23 +8,22 @@
     <meta name="author" content="STX Next sp. z o.o."/>
     <meta name="viewport" content="width=device-width; initial-scale=1.0">
     
-    <link href="/static/css/normalize.css" media="all" rel="stylesheet" href="text/css" />
-    <link href="/static/css/templ.css" media="all" rel="stylesheet" href="text/css" />
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" media="all" rel="stylesheet" href="text/css" />
+    <link href="{{ url_for('static', filename='css/styles.css') }}" media="all" rel="stylesheet" href="text/css" />
     
-    <script src="/static/js/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     {% block head %}
     {% endblock head %}
 </head>
-
 <body>
     <div id="main">
         <div id="header">
             <h1>Presence analyzer</h1>
-            
             <ul>
-                {% block header %}
-                {% endblock header %}
+                <li{% if selected_item == 'mainpage' %} id="selected"{% endif %}><a href="{{ url_for('mainpage') }}">Presence by weekday</a></li>
+                <li{% if selected_item == 'mean_time' %} id="selected"{% endif %}><a href="{{ url_for('mean_time') }}">Presence mean time</a></li>
+                <li{% if selected_item == 'start_end' %} id="selected"{% endif %}><a href="{{ url_for('start_end') }}">Presence start-end</a></li>
             </ul>
         </div>
         <div id="content">
@@ -34,6 +33,8 @@
                 <select id="user_id" style="display: none">
                     <option value="">--</option>
                 </select>
+                <div id="avatar_div" style="display: none">
+                </div>
                 <div id="chart_div" style="display: none">
                 </div>
                 <div id="loading">
