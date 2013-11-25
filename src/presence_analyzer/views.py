@@ -48,9 +48,9 @@ def users_view():
     Users listing for dropdown.
     """
     users = get_users()
-    #data = get_data()
+    data = get_data()
     result = [{'user_id': i, 'name': users[i]}
-              for i in users.keys()]
+        for i in users.keys() if int(i) in data.keys()]
 
     result.sort(key=lambda item: item['name'], cmp=locale.strcoll)
     return result
@@ -73,6 +73,7 @@ def mean_time_weekday_view(user_id):
     """
     Returns mean presence time of given user grouped by weekday.
     """
+    #import pdb; pdb.set_trace()
     data = get_data()
     if user_id not in data:
         log.debug('User %s not found!', user_id)
