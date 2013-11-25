@@ -6,9 +6,9 @@
         <protocol>https</protocol>
     </server>
     <users>
-        <user id="141">
-            <avatar>/api/images/users/141</avatar>
-            <name>Adam Pieśkiewicz</name>
+        <user id="10">
+            <avatar>/api/images/users/10</avatar>
+            <name>Maciej Zięba</name>
         </user>
     </users>
 </intranet>
