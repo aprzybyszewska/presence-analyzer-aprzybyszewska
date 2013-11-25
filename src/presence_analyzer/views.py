@@ -50,8 +50,8 @@ def users_view():
     users = get_users()
     data = get_data()
     result = [{'user_id': i, 'name': users[i]}
-        for i in users.keys() if int(i) in data.keys()]
-
+              for i in users.keys() if int(i) in data.keys()]
+    #import pdb; pdb.set_trace()
     result.sort(key=lambda item: item['name'], cmp=locale.strcoll)
     return result
 

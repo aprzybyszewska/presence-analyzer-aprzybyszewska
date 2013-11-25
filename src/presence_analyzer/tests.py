@@ -12,8 +12,6 @@ from presence_analyzer.utils import group_by_weekday_start_end, \
 from presence_analyzer import main, utils
 
 
-
-
 TEST_DATA_CSV = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
 )
@@ -78,8 +76,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 1)
-        self.assertDictEqual(data[0], {u'user_id': u'141',
-                                       u'name': u'Adam Pieśkiewicz'})
+        self.assertDictEqual(data[0], {u'user_id': u'10',
+                                       u'name': u'Maciej Zięba'})
         #self.assertEqual(len(data), 2)
         #self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
 
@@ -87,12 +85,12 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         """
         Test avatar viewing
         """
-        resp = self.client.get('/api/v1/get_avatar/141')
+        resp = self.client.get('/api/v1/get_avatar/10')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(data,
-                         'https://intranet.stxnext.pl/api/images/users/141')
+                         'https://intranet.stxnext.pl/api/images/users/10')
 
     def test_mean_time_weekday_view(self):
         """
@@ -170,17 +168,17 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         data = utils.get_users()
         self.assertIsInstance(data, dict)
-        self.assertEqual(data.keys(), ['141'])
-        self.assertEqual(data['141'], u'Adam Pieśkiewicz')
+        self.assertEqual(data.keys(), ['10'])
+        self.assertEqual(data['10'], u'Maciej Zięba')
 
     def test_get_avatars(self):
         """
         Test getting avatar
         """
         data = utils.get_avatars()
-        self.assertEqual(data.keys(), ['141'])
-        self.assertEqual(data['141'],
-                         'https://intranet.stxnext.pl/api/images/users/141')
+        self.assertEqual(data.keys(), ['10'])
+        self.assertEqual(data['10'],
+                         'https://intranet.stxnext.pl/api/images/users/10')
 
     def test_group_by_weekday(self):
         """
